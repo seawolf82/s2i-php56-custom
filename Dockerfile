@@ -83,13 +83,30 @@ RUN sed -i 's/\[OCI8\]/[OCI8]\nextension=oci8.so\nextension_dir=\/usr\/lib64\/ph
 COPY ./s2i/bin/ /usr/libexec/s2i
 
 # TODO: Drop the root user and make the content of /opt/app-root owned by user 1001
-# RUN chown -R 1001:1001 /opt/app-root
+RUN chown -R 1001:1001 /opt/app-root
+
+RUN chmod -R a+rwx /etc/httpd/conf
+RUN chmod -R a+rwx /etc/httpd/conf.d
+RUN chmod -R a+rwx /etc/httpd/logs
+RUN chown -R 1001:0 /etc/httpd/logs
+RUN chmod -R a+rwx /etc/php.d
+RUN chmod -R a+rwx /etc/php.ini
+RUN chown -R 1001:0 /etc/php.d
+RUN chown -R 1001:0 /etc/php.ini
+RUN chmod -R a+rwx /var/run/httpd
+RUN chmod -R a+rwx /var/lib/php/session
+RUN chown -R 1001:0 /var/lib/php/session
+RUN chmod -R a+rwx /var/www/
+RUN chown -R 1001:0 /var/www/
+
+
+
 
 # This default user is created in the openshift/base-centos7 image
-#USER 1001
+USER 1001
 
 # TODO: Set the default port for applications built using this image
- EXPOSE 8080
+EXPOSE 8080
 
 # TODO: Set the default CMD for the image
 # CMD ["/usr/libexec/s2i/usage"]
